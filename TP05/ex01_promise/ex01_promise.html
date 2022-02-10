@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+    * {
+      font-family: "Roboto";
+      /* text-transform: uppercase; */
+    }
+    * {
+      font-size: 1.2rem;
+    }
+    section {
+      margin-top: 2rem;
+    }
+    button {
+      border: none;
+      box-shadow: 1px 2px blur;
+      padding: 8px 10px;
+      font-size: 1.4rem;
+      color: #fff;
+      background-color: #28c76f;
+      border-radius: 5%;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #11af58;
+      cursor: pointer;
+    }
+    #output div {
+      font-size: 1.8rem;
+      color: #ec3333;
+    }
+    span {
+      color: #00a74b;
+    }
+  </style>
+  <body>
+    <section>
+      <input type="number" id="test" placeholder="Enter user id" />
+      <button>Find</button>
+      <div id="output"></div>
+    </section>
+    <script>
+      //sameple database
+      const db1 = {
+        1: { id: 1, sex: "M", pic: "😀" },
+        4: { id: 4, sex: "F", pic: "😁" },
+        6: { id: 6, sex: "F", pic: "😉" },
+      };
+      const db2 = {
+        2: { id: 2, sex: "F", pic: "🙂" },
+        5: { id: 5, sex: "M", pic: "😗" },
+      };
+      const db3 = {
+        3: { id: 3, sex: "M", pic: "🙄" },
+      };
+      //meta server
+      const metaData = {
+        1: "db1",
+        2: "db2",
+        3: "db3",
+        4: "db1",
+        5: "db2",
+        6: "db1",
+      };
+      const userData = {
+        1: { name: "Boupha", age: 18, private: false },
+        2: { name: "Chakra", age: 22, private: true },
+        3: { name: "Champey", age: 17, private: false },
+        4: { name: "Dara", age: 20, private: false },
+        5: { name: "Dava", age: 19, private: true },
+        6: { name: "Chorvon", age: 22, private: false },
+      };
+      //select html dom
+      const input = document.getElementById("test");
+      const findBtn = document.querySelector("button");
+      const renderOutput = document.getElementById("output");
+
+      let dbName;
+      let userDB;
+      let userPrivateDB;
+      let exist;
+      let userFound;
+      findBtn.addEventListener("click", () => {
+        const metaServer = new Promise((resolve, reject) => {
+          console.log(db1[input.value]);
+          dbName = metaData[input.value];
+          console.log(dbName);
+          console.log(Object.keys(metaData).length);
+          //validate the input id with the db
+          for (const key in metaData) {
+            if (key == input.value) {
+              exist = true;
+              break;
+            } else {
+              exist = false;
+            }
+            console.log(key + " " + metaData[key]);
+          }
+          if (exist) resolve("User found");
+          else reject("Input user id is not found! 😥");
+        });
+
+        metaServer.then(
+          (msg) => {
+            console.log(msg);
+
+            const privateServer = new Promise((resolve, reject) => {
+              const user = userData[input.value];
+              console.log(user);
+              console.log(user["private"]);
+              if (!user["private"]) {
+                userPrivateDB = user;
+                resolve("User data is public");
+              } else reject("User data is private");
+            });
+            privateServer.then(
+              (msg) => {
+                console.log(msg);
+                renderHTML();
+              },
+              (err) => {
+                console.log(err);
+                renderPrivateUserMsg();
+              }
+            );
+
+            if (dbName == "db1") {
+              userDB = db1[input.value];
+              console.log("user db1: ", userDB);
+            } else if (dbName == "db2") {
+              userDB = db2[input.value];
+              console.log("user db2: ", userDB);
+            } else if (dbName == "db3") {
+              userDB = db3[input.value];
+              console.log("user db3: ", userDB);
+            }
+          },
+          (err) => {
+            console.log(err);
+            userFound = false;
+            renderNotFound();
+          }
+        );
+
+        // render to html
+        function renderHTML() {
+          renderOutput.innerHTML = `
+          <div><span>User id:</span>  ${userDB.id}</div>
+          <div><span>Gender:</span> ${userDB.sex}</div>
+          <div> <span>Profile picture:</span> ${userDB.pic}</div>
+          <div><span> Username: </span>${userPrivateDB.name}</div>
+          <div><span>Age:</span>  ${userPrivateDB.age}</div>
+
+            `;
+        }
+        function renderPrivateUserMsg() {
+          renderOutput.innerHTML = "<div>User data is private 😐</div>";
+        }
+        function renderNotFound() {
+          renderOutput.innerHTML = "<div>Input ID does not exist 💔</div>";
+        }
+
+        console.log(userDB);
+        console.log(userPrivateDB);
+      });
+    </script>
+  </body>
+</html>

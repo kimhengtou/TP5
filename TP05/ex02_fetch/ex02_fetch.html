@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .loader {
+      border: 10px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 10px solid #3498db;
+      width: 100px;
+      height: 100px;
+      -webkit-animation: spin 1s linear infinite; /* Safari */
+      animation: spin 1s linear infinite;
+      position: absolute;
+      top: 40%;
+      left: 55%;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    section {
+      display: flex;
+    }
+    .aside {
+      position: fixed;
+
+      /* margin-right: 30vw; */
+      width: 300px;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      margin-right: 1rem;
+      /* border: 1px solid; */
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    .main {
+      /* overflow-y: scroll; */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 70%;
+      height: 100vh;
+      position: absolute;
+      right: 0;
+      /* background-color: green; */
+    }
+  </style>
+  <body>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <!-- <link rel="stylesheet" href="style.css" /> -->
+      </head>
+      <body>
+        <div class="loading loader"></div>
+        <section>
+          <div class="aside">
+            <p>Name</p>
+            <input type="text" class placeholder="c program" />
+            <p>Category</p>
+            <input type="text" class placeholder="coding" />
+            <p>Price</p>
+            <input type="text" class placeholder="5000 riels" />
+            <br />
+            <br />
+            <button>Add</button>
+          </div>
+          <div class="main">
+            <!-- <img src="" alt="" />
+            <p>Title</p>
+            <p>AlbumID</p>
+            <p>ID</p> -->
+          </div>
+        </section>
+      </body>
+    </html>
+
+    <script>
+      const loader = document.querySelector(".loading");
+      const bookMainSection = document.querySelector(".main");
+      let loading = true;
+      fetch(`https://jsonplaceholder.typicode.com/photos?_start=0&_limit=100`)
+        .then((response) => response.json())
+        .then((json) => {
+          loading = false;
+          if (!loading) {
+            loader.classList.remove("loader");
+          }
+          json.forEach((e) => {
+            // console.log(e);
+            // console.log("Title: " + e.title);
+            // console.log("AlbumID: " + e.albumId);
+            // console.log("ID: " + e.id);
+            renderHTML(e.title, e.albumId, e.id, e.thumbnailUrl);
+          });
+        });
+      //   console.log(saveData);
+      function renderHTML(title, albumId, id, img) {
+        bookMainSection.innerHTML += `
+        <div class=container>
+            <img src="${img}" alt="" />
+            <p>Title: ${title}</p>
+            <p>AlbumId: ${albumId}</p>
+            <p>Id: ${id}</p>
+            <a href="ex02_seemore.html?id=${id}">See more</a>
+        </div>
+          `;
+      }
+    </script>
+  </body>
+</html>

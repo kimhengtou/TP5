@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const queryString = window.location.search;
+      console.log(queryString);
+      const urlParams = new URLSearchParams(queryString);
+      const id = urlParams.get("id");
+      console.log(id);
+      fetch(`https://jsonplaceholder.typicode.com/photos/${id}`)
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          render(json);
+        });
+
+      function render(b) {
+        document.querySelector("body").innerHTML = `
+             <div> ID = ${b.id}</div>
+            <div> Albumid = ${b.albumId} </div>
+            <div> Title = ${b.title}</div>
+            <div> url = ${b.url}</div>
+            <div>ImgUrl = ${b.thumbnailUrl}</div>
+        `;
+      }
+    </script>
+  </body>
+</html>
